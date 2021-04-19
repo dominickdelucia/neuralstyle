@@ -55,9 +55,11 @@ def run_style_transfer(content_image, style_image,
                                                       style_targets, content_targets,
                                                       alpha, beta)
             grad = tape.gradient(total_loss, img)
+            print(grad)
             optim.apply_gradients([(grad, img)])
             # todo: use something else for this
             img.assign(clip_0_1(img))
+            display.display(viz_tensor(img))
 
 #         print(total_loss)
         print('Style Loss : {:4f} Content Loss: {:4f}'.format(s, c))

@@ -14,6 +14,19 @@ def compute_content_loss(content_outputs, content_targets):
 
     return content_loss
 
+def compute_content_loss_vector(img, content_object):
+    content_loss = 0
+    content_targets = content_object.targets
+    content_outputs = content_object.feature_extractor(img)
+    
+    # iterate over content features
+    for i in range(len(content_outputs)):
+        content_loss += tf.reduce_mean((content_targets[i]-content_outputs[i])**2)*content_object.feature_vector[i]
+        
+    content_loss /= len(content_outputs)
+
+    return content_loss
+
 
 def compute_content_loss_l1(content_outputs, content_targets):
     content_loss = 0
@@ -45,13 +58,24 @@ def compute_style_loss(style_outputs, style_targets):
     return style_loss
 
 
+def compute_style_loss_vector(img, style_object):
+    style_outputs = style_object.feature_extractor(img)
+    style_targets = style_object.targets
+                                                   
+    style_loss = 0
+    # iterate over style features
+    for i in range(len(style_outputs)):
+        # todo: might have to do the long version
+        # compute gram matrix for each style tensor and compute the mse between them
+        G = gram_matrix(style_outputs[i])
+        A = gram_matrix(style_targets[i])
+        loss_i = tf.reduce_mean((G-A)**2) 
+        style_loss += loss_i*style_object.feature_vector[i]
+        # todo normalize? 1/(4NM)
 
+    style_loss = style_loss / len(style_outputs)
+    return style_loss
 
-# def gram_matrix(layer_output):
-#     result = tf.linalg.einsum('bijc,bijd->bcd', layer_output, layer_output)
-#     input_shape = tf.shape(layer_output)
-#     num_locations = tf.cast(input_shape[1]*input_shape[2], tf.float32)
-#     return result/(num_locations)
 
 
 def gram_matrix(output):
@@ -92,5 +116,13 @@ def total_loss_vanilla(img,
     total_loss = alpha*content_loss + beta*style_loss
     return total_loss, content_loss, style_loss
 
+
+def calc_total_loss(img, content_object, style_object):    
+    pp_img = tf.keras.applications.vgg19.preprocess_input(img*255)
+    content_loss = compute_content_loss_vector(pp_img, content_object)
+    style_loss = compute_style_loss_vector(pp_img, style_object)
+    total_loss = content_loss + style_loss*100
+    return total_loss, content_loss, style_loss
+    
 
 
