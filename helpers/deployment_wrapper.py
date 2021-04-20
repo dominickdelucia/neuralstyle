@@ -15,7 +15,7 @@ def run_style_transfer(content_image, style_image,
                        style_layers = base_style_layers,
                        n_epochs=10, n_steps_per_epoch=100, 
                        lr = 0.02, decay = 1e-6,
-                       alpha=1, beta=100):
+                       alpha=1e4, beta=1e-2):
     """ 
     Params:
     - n_epochs: number of epochs
