@@ -6,7 +6,6 @@ from helpers.viz_funcs import *
 import IPython.display as display
 
 
-VGG_MEAN = [103.939, 116.779, 123.68]
 
             
             
@@ -23,20 +22,19 @@ class image_obj:
         self.feature_layers = feature_layers
         self.feature_vector = feature_vector
         if self.color_adj:
-            self.img = self.img - VGG_MEAN
+            self.img = self.img - color_mean
     
     
     def get_color_adj_img(self):
-        return self.img +VGG_MEAN
+        return self.img + color_mean
     
     
     def set_feature_extractor(self):
         # load a pretrained vgg19 model
         ## include_top is set to false, because we do not need the classification layer
 
-        #TODO: Are we including avg pooling?? Check on this***
         ## avg pooling is selected because Gatys et al. said that's what they did
-        vgg = tf.keras.applications.VGG19(include_top=False, weights='imagenet')
+        vgg = tf.keras.applications.VGG19(include_top=False, weights='imagenet', pooling = 'avg')
         # set trainable to false
         vgg.trainable = False
 
@@ -47,9 +45,7 @@ class image_obj:
 
         self.feature_extractor = tf.keras.Model([vgg.input], outputs)
         print('feature_extractor is now set...') 
-        self.targets = self.feature_extractor(self.preprocessed_img(self.original_img))
-#         display.display(viz_tensor(self.targets[0]))
-    
+        self.targets = self.feature_extractor(self.preprocessed_img(self.original_img))    
     
     
     def preprocessed_img(self, img):

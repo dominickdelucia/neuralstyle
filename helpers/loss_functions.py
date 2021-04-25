@@ -53,6 +53,7 @@ def compute_style_loss(style_outputs, style_targets):
         loss_i = tf.reduce_mean((G-A)**2)
         style_loss += loss_i
         # todo normalize? 1/(4NM)
+        
 
     style_loss = style_loss / len(style_outputs)
     return style_loss
@@ -65,15 +66,15 @@ def compute_style_loss_vector(img, style_object):
     style_loss = 0
     # iterate over style features
     for i in range(len(style_outputs)):
-        # todo: might have to do the long version
         # compute gram matrix for each style tensor and compute the mse between them
         G = gram_matrix(style_outputs[i])
         A = gram_matrix(style_targets[i])
-        loss_i = tf.reduce_mean((G-A)**2) 
-        style_loss += loss_i*style_object.feature_vector[i]
-        # todo normalize? 1/(4NM)
+        # According to equation 4 in the paper 
+        loss_i = tf.reduce_sum((G-A)**2) /(4*G.shape[0]**2 * A.shape[0]**2)
+        # implementing the different weights for each layer here 
+        style_loss += (loss_i*style_object.feature_vector[i])/len(style_outputs) 
 
-    style_loss = style_loss / len(style_outputs)
+    style_loss = style_loss 
     return style_loss
 
 
@@ -119,6 +120,7 @@ def total_loss_vanilla(img,
 
 def calc_total_loss(img, content_object, style_object):    
     pp_img = tf.keras.applications.vgg19.preprocess_input(img*255)
+    # choosing to use the vectorized style and content weights
     content_loss = compute_content_loss_vector(pp_img, content_object)
     style_loss = compute_style_loss_vector(pp_img, style_object)
     total_loss = content_loss + style_loss*100
