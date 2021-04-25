@@ -5,9 +5,6 @@ from helpers.viz_funcs import *
 
 import IPython.display as display
 
-
-
-            
             
 class image_obj:
     def __init__ (self, file_path, img_type,

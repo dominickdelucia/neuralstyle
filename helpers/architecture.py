@@ -18,7 +18,7 @@ base_style_layers = [
 ]
 base_style_weights = [1e-2,1e-2,1e-2,1e-2,1e-2]
 
-base_style_weightsL = [1e-2,1e-2,1e-1,1,1e1]
+base_style_weightsL = [1e-2,1e-2,1e-1,1e0,1e0]
 
 base_style_weightsS = [1e-1,1e-1,1e-2,1e-3,1e-3]
 
