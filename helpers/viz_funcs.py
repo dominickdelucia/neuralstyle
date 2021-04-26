@@ -1,3 +1,12 @@
+### These are extremely simple visualization helpers
+# Chose to house these functions in a separate file because they were used often
+# and used all over the place when building this process
+#
+# 
+
+
+
+
 import tensorflow as tf
 import numpy as np
 
@@ -9,6 +18,7 @@ def viz_tensor(x):
 
 
 def load_img(path_to_img):
+    # capping the max image size at 512 for speed and efficacy 
     max_dim = 512
     img = tf.io.read_file(path_to_img)
     img = tf.image.decode_image(img, channels=3)

@@ -1,4 +1,10 @@
-
+### In this file you can find the various settings for running different style transfers
+#
+# When researching for different results, it is easiest to change these constructions and have it flow
+# Thru to the main ipython notebook for running and getting results
+# 
+# things labeled "base" are compatible with the original paper's recommendations on style/content layers
+# things labeled exp are experimental and we changed these a lot to see their results
 
 base_content_layers= ["block4_conv2"]
 base_content_weights = [1e6]

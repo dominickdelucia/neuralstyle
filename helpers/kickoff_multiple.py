@@ -1,3 +1,10 @@
+##### This file is never actually run... just a clone of the process for kicking off many style transfers
+# Copied code from the jupyter notebook into here just in case I was messing around with the code too much
+# and something broke or got out of whack.. I had a reference to go back to
+#
+#
+
+
 from PIL import Image
 from helpers.arch_objects import * 
 from helpers.image_objects import *
